@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Оценка дискретной случайной величины</title>
+  </head>
+  <body>
+    <input type="number" value="2" class="table-size" min="1" />
+    <table class="dis-table">
+      <tr></tr>
+      <tr></tr>
+    </table>
+    <p>MX = <span class="M"></span></p>
+    <p>DX = <span class="D"></span></p>
+    <div style="display: inline-block">
+      <input type="number" class="n" value="2" min="2" />
+      <button class="n-btn">N</button>
+    </div>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>N</th>
+          <th>MX</th>
+          <th>m</th>
+          <th>|MX-m|</th>
+          <th>DX</th>
+          <th>g</th>
+          <th>|DX-g|</th>
+        </tr>
+      </thead>
+      <tbody style="text-align: center"></tbody>
+    </table>
+    <script>
+      currDisTableSize = 0;
+      xs = [];
+      ps = [];
+      numbers = [];
+      let M = 0;
+      let D = 0;
+
+      function resizeDisTable(n) {
+        if (n < currDisTableSize) {
+          xs = xs.slice(0, n);
+          ps = ps.slice(0, n);
+        } else {
+          for (i = currDisTableSize; i < n; i++) {
+            xs.push(0);
+            ps.push(0);
+          }
+        }
+        currDisTableSize = n;
+        table = document.querySelector(".dis-table");
+
+        document.querySelectorAll(".dis-table tr").forEach((el) => el.remove());
+
+        xsRow = document.createElement("tr");
+        psRow = document.createElement("tr");
+        xsHeader = document.createElement("th");
+        xsHeader.innerText = "X";
+        xsRow.append(xsHeader);
+        for (let i = 0; i < xs.length; i++) {
+          xd = document.createElement("td");
+          xdi = document.createElement("input");
+          xdi.type = "number";
+          xdi.dataset.ind = i;
+          xdi.value = xs[i];
+          xdi.addEventListener("input", (e) => {
+            xs[i] = e.target.value;
+            refreshReslut();
+          });
+          xd.append(xdi);
+          xsRow.append(xd);
+        }
+
+        psHeader = document.createElement("th");
+        psHeader.innerText = "P";
+        psRow.append(psHeader);
+        for (let i = 0; i < ps.length; i++) {
+          pd = document.createElement("td");
+          pdi = document.createElement("input");
+          pdi.type = "number";
+          pdi.dataset.ind = i;
+          pdi.value = ps[i];
+          pdi.addEventListener("input", (e) => {
+            ps[i] = e.target.value;
+            refreshReslut();
+          });
+          pd.append(pdi);
+          psRow.append(pd);
+        }
+
+        table.append(xsRow);
+        table.append(psRow);
+
+        refreshReslut();
+      }
+
+      function refreshReslut() {
+        calcRealMandD();
+        document
+          .querySelectorAll(".result-table tbody tr")
+          .forEach((el) => el.remove());
+        document.querySelector(".M").innerHTML = M.toFixed(10);
+        document.querySelector(".D").innerHTML = D.toFixed(10);
+      }
+
+      function calcRealMandD() {
+        M = 0;
+        let MS = 0;
+        for (let i = 0; i < currDisTableSize; i++) {
+          M += xs[i] * ps[i];
+          MS += xs[i] * xs[i] * ps[i];
+        }
+        D = MS - M * M;
+      }
+
+      resizeDisTable(2);
+      document.querySelector(".table-size").addEventListener("input", (e) => {
+        resizeDisTable(e.target.value);
+      });
+
+      function generateNumber(n) {
+        probsTable = [0];
+        for (let i = 0; i < currDisTableSize; i++) {
+          probsTable.push(Number(probsTable[i]) + Number(ps[i]));
+        }
+        console.log(probsTable, n);
+        for (let i = 0; i < n; i++) {
+          let rand = Math.random();
+          for (let j = 0; j < probsTable.length; j++) {
+            if (rand < probsTable[j]) {
+              numbers.push(Number(xs[j - 1]));
+              break;
+            }
+          }
+        }
+        console.log(numbers);
+      }
+
+      function calcMandDPrac(numbers) {
+        let m = 0;
+        let sm = 0;
+        for (let i = 0; i < numbers.length; i++) {
+          m += numbers[i];
+          sm += numbers[i] * numbers[i];
+        }
+        m /= numbers.length;
+        sm = sm / (numbers.length - 1);
+        let g = sm - (numbers.length / (numbers.length - 1)) * m * m;
+        return { m, g };
+      }
+
+      document.querySelector(".n-btn").addEventListener("click", (e) => {
+        n = Number(document.querySelector(".n").value);
+        for (n = 2; n < 1000000; n += 100) {
+          numbers = [];
+          generateNumber(n);
+          let { m, g } = calcMandDPrac(numbers);
+          tableRow = document.createElement("tr");
+          NCol = document.createElement("td");
+          NCol.innerText = n;
+          tableRow.append(NCol);
+          MXCol = document.createElement("td");
+          MXCol.innerText = M.toFixed(10);
+          tableRow.append(MXCol);
+          mCol = document.createElement("td");
+          mCol.innerText = m.toFixed(10);
+          tableRow.append(mCol);
+          mdCol = document.createElement("td");
+          mdCol.innerText = Math.abs(m - M).toFixed(10);
+          tableRow.append(mdCol);
+          DCol = document.createElement("td");
+          DCol.innerText = D.toFixed(10);
+          tableRow.append(DCol);
+          gCol = document.createElement("td");
+          gCol.innerText = g.toFixed(10);
+          tableRow.append(gCol);
+          DDCol = document.createElement("td");
+          DDCol.innerText = Math.abs(D - g).toFixed(10);
+          tableRow.append(DDCol);
+          document.querySelector(".result-table tbody").append(tableRow);
+        }
+      });
+    </script>
+    <style>
+      .result-table td {
+        padding: 5px;
+      }
+    </style>
+  </body>
+</html>
