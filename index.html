@@ -101,8 +101,8 @@
         document
           .querySelectorAll(".result-table tbody tr")
           .forEach((el) => el.remove());
-        document.querySelector(".M").innerHTML = M.toFixed(10);
-        document.querySelector(".D").innerHTML = D.toFixed(10);
+        document.querySelector(".M").innerHTML = M.m.toFixed(2);
+        document.querySelector(".D").innerHTML = D.m.toFixed(2);
       }
 
       function calcRealMandD() {
@@ -125,7 +125,6 @@
         for (let i = 0; i < currDisTableSize; i++) {
           probsTable.push(Number(probsTable[i]) + Number(ps[i]));
         }
-        console.log(probsTable, n);
         for (let i = 0; i < n; i++) {
           let rand = Math.random();
           for (let j = 0; j < probsTable.length; j++) {
@@ -135,7 +134,6 @@
             }
           }
         }
-        console.log(numbers);
       }
 
       function calcMandDPrac(numbers) {
@@ -153,34 +151,32 @@
 
       document.querySelector(".n-btn").addEventListener("click", (e) => {
         n = Number(document.querySelector(".n").value);
-        for (n = 2; n < 1000000; n += 100) {
-          numbers = [];
-          generateNumber(n);
-          let { m, g } = calcMandDPrac(numbers);
-          tableRow = document.createElement("tr");
-          NCol = document.createElement("td");
-          NCol.innerText = n;
-          tableRow.append(NCol);
-          MXCol = document.createElement("td");
-          MXCol.innerText = M.toFixed(10);
-          tableRow.append(MXCol);
-          mCol = document.createElement("td");
-          mCol.innerText = m.toFixed(10);
-          tableRow.append(mCol);
-          mdCol = document.createElement("td");
-          mdCol.innerText = Math.abs(m - M).toFixed(10);
-          tableRow.append(mdCol);
-          DCol = document.createElement("td");
-          DCol.innerText = D.toFixed(10);
-          tableRow.append(DCol);
-          gCol = document.createElement("td");
-          gCol.innerText = g.toFixed(10);
-          tableRow.append(gCol);
-          DDCol = document.createElement("td");
-          DDCol.innerText = Math.abs(D - g).toFixed(10);
-          tableRow.append(DDCol);
-          document.querySelector(".result-table tbody").append(tableRow);
-        }
+        numbers = [];
+        generateNumber(n);
+        let { m, g } = calcMandDPrac(numbers);
+        tableRow = document.createElement("tr");
+        NCol = document.createElement("td");
+        NCol.innerText = n;
+        tableRow.append(NCol);
+        MXCol = document.createElement("td");
+        MXCol.innerText = M.m.toFixed(2);
+        tableRow.append(MXCol);
+        mCol = document.createElement("td");
+        mCol.innerText = m.m.toFixed(2);
+        tableRow.append(mCol);
+        mdCol = document.createElement("td");
+        mdCol.innerText = Math.abs(m - M).m.toFixed(2);
+        tableRow.append(mdCol);
+        DCol = document.createElement("td");
+        DCol.innerText = D.m.toFixed(2);
+        tableRow.append(DCol);
+        gCol = document.createElement("td");
+        gCol.innerText = g.m.toFixed(2);
+        tableRow.append(gCol);
+        DDCol = document.createElement("td");
+        DDCol.innerText = Math.abs(D - g).m.toFixed(2);
+        tableRow.append(DDCol);
+        document.querySelector(".result-table tbody").append(tableRow);
       });
     </script>
     <style>
