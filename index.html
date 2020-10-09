@@ -101,8 +101,8 @@
         document
           .querySelectorAll(".result-table tbody tr")
           .forEach((el) => el.remove());
-        document.querySelector(".M").innerHTML = M.m.toFixed(2);
-        document.querySelector(".D").innerHTML = D.m.toFixed(2);
+        document.querySelector(".M").innerHTML = M.toFixed(2);
+        document.querySelector(".D").innerHTML = D.toFixed(2);
       }
 
       function calcRealMandD() {
@@ -159,22 +159,22 @@
         NCol.innerText = n;
         tableRow.append(NCol);
         MXCol = document.createElement("td");
-        MXCol.innerText = M.m.toFixed(2);
+        MXCol.innerText = M.toFixed(2);
         tableRow.append(MXCol);
         mCol = document.createElement("td");
-        mCol.innerText = m.m.toFixed(2);
+        mCol.innerText = m.toFixed(2);
         tableRow.append(mCol);
         mdCol = document.createElement("td");
-        mdCol.innerText = Math.abs(m - M).m.toFixed(2);
+        mdCol.innerText = Math.abs(m - M).toFixed(2);
         tableRow.append(mdCol);
         DCol = document.createElement("td");
-        DCol.innerText = D.m.toFixed(2);
+        DCol.innerText = D.toFixed(2);
         tableRow.append(DCol);
         gCol = document.createElement("td");
-        gCol.innerText = g.m.toFixed(2);
+        gCol.innerText = g.toFixed(2);
         tableRow.append(gCol);
         DDCol = document.createElement("td");
-        DDCol.innerText = Math.abs(D - g).m.toFixed(2);
+        DDCol.innerText = Math.abs(D - g).toFixed(2);
         tableRow.append(DDCol);
         document.querySelector(".result-table tbody").append(tableRow);
       });
